@@ -1,8 +1,9 @@
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
-
 const app = express();
+
+const VOTERID = require('./models/voter-id');
 
 const PORT = process.env.PORT || 5000
 
@@ -13,7 +14,7 @@ mongoose.set('useUnifiedTopology', true);
 mongoose.connect(`mongodb+srv://ijhar:1234@cluster0-hi3ct.mongodb.net/test?retryWrites=true&w=majority`);
 mongoose.connection.on('error', (err) => {
 	// console.error(err);
-	console.log('%s MongoDB connection error. Please make sure MongoDB is running.', chalk.red('✗'));
+	console.log('%s MongoDB connection error. Please make sure MongoDB is running.', err);
 	process.exit();
 });
 
@@ -28,6 +29,29 @@ app.get('/api/getList', (req, res) => {
 	res.json(list);
 	console.log('Sent list of items');
 });
+
+// An api endpoint that returns a voter list 
+app.get('/api/voters', async (req, res) => {
+
+	let data = await VOTERID.find({})
+	return res.send(data);
+});
+
+app.post('/api/registervoter', async (req, res) => {
+
+	const voter = new VOTERID({
+		name: req.body.name
+	});
+	try {
+		const result = await voter.save();
+		return res.status(201).send(result);
+	} catch (err) {
+		return res.status(500).send(err);
+	}
+
+});
+
+
 
 // Handles any requests that don't match the ones above
 app.get('*', (req, res) => {
