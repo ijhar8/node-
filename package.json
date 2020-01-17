@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "author": "",
-  "scripts": {
-    "start": "pm2 start index.js",
-    "heroku-postbuild": "cd client && npm install --only=dev && npm install && npm run build"
-  },
+  "scripts": { 
+    "preinstall": "npm install pm2 -g", 
+    "start": "pm2-runtime index.js -i max"
+   },
   "keywords": [],
   "license": "ISC",
   "dependencies": {
