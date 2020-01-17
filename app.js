@@ -3,6 +3,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
+const VOTERID = require('./models/voter-id');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -19,11 +20,38 @@ mongoose.connection.on('error', (err) => {
     process.exit();
 });
 
+/*** Express configuration. */
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'pug');
+app.use((req, res, next) => {
+    next()
+})
+
 
 app.get('/', (req, res) => {
 
     return res.send(JSON.stringify({ "lol": "lol" }))
 })
+app.get('/voters', async (req, res) => {
+
+    let data = await VOTERID.find({})
+    return res.send(data);
+})
+
+app.post('/register', async (req, res) => {
+
+    const voter = new VOTERID({
+        name: req.body.name
+    });
+    try {
+        const result = await voter.save();
+        return res.status(201).send(result);
+    } catch (err) {
+        return res.status(500).send(err);
+    }
+
+})
+
 
 
 
