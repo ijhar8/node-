@@ -5,13 +5,14 @@
   "main": "index.js",
   "author": "",
   "scripts": {
-    "start": "node index.js",
+    "start": "pm2 start index.js",
     "heroku-postbuild": "cd client && npm install --only=dev && npm install && npm run build"
   },
   "keywords": [],
   "license": "ISC",
   "dependencies": {
     "express": "^4.16.3",
-    "mongoose": "^5.8.7"
+    "mongoose": "^5.8.7",
+    "pm2": "^4.2.1"
   }
 }
